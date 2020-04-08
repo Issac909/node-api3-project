@@ -1,5 +1,5 @@
 const express = require('express');
-const posts = require('./postDb');
+const posts = require('./post-model');
 const router = express.Router();
 
 // Custom middleware can be found in the 'common' folder
@@ -15,16 +15,23 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', validatePostId, (req, res) => {
-  posts.getById(req.params.id)
+  posts
+    .getById(req.params.id)
     .then(post => res.status(200).json(post))
     .catch(err => res.status(404).json({message: 'could not find posts with this ID', err}))
   });
 
-
+router.post('/', validatePost, (req, res) => {
+  posts
+    .insert(req.body)
+    .then(post => res.status(201).json(post))
+    .catch(err => console.log('This is a post error', err));
+})
 
 router.delete('/:id', validatePostId, (req, res) => {
-  posts.remove(req.params.id)
-  .then(post => {
+  posts
+    .remove(req.params.id)
+    .then(post => {
     res.status(200).json({message:`post has been deleted`})
   })
   .catch(err => res.status(404).json({errorMessage: `cannot delete post`, err}))

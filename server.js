@@ -1,21 +1,27 @@
 const express = require('express');
-const server = express();
+
+const cors = require('cors');
 
 const userRouter = require('./users/userRouter');
 const postRouter = require('./posts/postRouter');
 
 const logger = require('./common/logger-middleware');
 
+const server = express();
+// Middleware
 server.use(express.json());
-
+server.use(cors());
 server.use(logger);
 
 server.use('/users', logger, userRouter);
 server.use('/posts', logger, postRouter);
 
-
 server.get('/', (req, res, next) => {
   const nameInsert = (req.name) ? `${req.name}` : "";
+  res.setHeader({
+    ...res.headers,
+    ContentType: 'text/html'
+  });
   res.send(`<h2>Let's write some middleware ${nameInsert}!</h2>`);
 });
 

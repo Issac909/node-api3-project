@@ -1,6 +1,7 @@
-const posts = require('../posts/postDb');
+const posts = require('../posts/post-model');
 
 module.exports = function validatePostId() {
+  // This middleware is pretty universal when it comes to updating 
   posts
     .getById(req.params.id)
     .then(post => {
