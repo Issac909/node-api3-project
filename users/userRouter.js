@@ -1,8 +1,9 @@
 const express = require("express");
-const users = require("./userDb");
+const users = require("./user-model");
 const postRouter = require("../posts/postRouter");
 const router = express.Router();
 
+// Custom MiddlWare details can be found in the 'common' folder
 const validateUser = require('../common/validate-user');
 const validateUserId = require('../common/validate-id');
 const validatePost = require('../common/validate-post');
@@ -62,56 +63,5 @@ router.put("/:id", validateUser, validateUserId, (req, res) => {
       res.status(404).json({ errorMessage: `could not update this user `, err })
     );
 });
-
-//custom middleware
-
-// function validateUserId() {
-//   return (req, res, next) => {
-//     users
-//       .getById(req.params.id)
-//       .then(user => {
-//         if (user) {
-//           req.user = user;
-//           next();
-//         } else {
-//           res.status(400).json({ message: "id does not exist" });
-//         }
-//       })
-//       .catch(err =>
-//         res.status(500).json({ message: "error getting user with this ID" })
-//       );
-//   };
-// }
-
-// function validateUser() {
-//   return (req, res, next) => {
-//     resource = {
-//       name: req.body.name
-//     };
-
-//     if (!req.body.name) {
-//       return res.status(404).json({ message: "missing user data" });
-//     } else {
-//       req.user = resource;
-//       next();
-//     }
-//   };
-// }
-
-// function validatePost() {
-//   return (req, res, next) => {
-//     resource = {
-//       text: req.body.text,
-//       user_id: req.params.id
-//     };
-
-//     if (!req.body.text) {
-//       return res.status(404).json({ message: "missing post data" });
-//     } else {
-//       req.text = resource;
-//       next();
-//     }
-//   };
-// }
 
 module.exports = router;
