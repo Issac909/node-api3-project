@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
+
+import UpdatePost from './UpdatePost';
 
 const PostCard = () => {
   const [post, setPost] = useState([]);
   const [selected, setSelected] = useState({});
   const [isSelected, setIsSelected] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const getPosts = () => {
     return axios
@@ -18,25 +20,28 @@ const PostCard = () => {
       });
   };
 
-  const getPostById = (info) => e => {
+  const getPostById = (info) => (e) => {
     e.preventDefault();
-    if (post.id == info.id) {
-      return axios
-        .get(`http://localhost:5000/posts/${info.id}`)
-        .then((res) => {
-          console.log(res);
-          setSelected(res.data);
-          setIsSelected(true);
-          localStorage.setItem("postid", res.data.id);
-        })
-        .catch((err) => console.log(err));
-    }
+    return axios
+      .get(`http://localhost:5000/posts/${info.id}`)
+      .then((res) => {
+        console.log(res);
+        setSelected(res.data);
+        setIsSelected(true);
+        localStorage.setItem("postid", res.data.id);
+      })
+      .catch((err) => console.log(err));
   };
 
-  const deselect = e => {
+  const deselect = (e) => {
     e.preventDefault();
+
     setIsSelected(false);
-    localStorage.removeItem("postid")
+  };
+
+  const updating = e => {
+    e.preventDefault();
+    setIsUpdating(!isUpdating);
   }
 
   useEffect(() => {
@@ -49,18 +54,21 @@ const PostCard = () => {
         post.map((info) => {
           return (
             <div key={info.id} onClick={getPostById(info)}>
-              <p >{info.text}</p>
+              <p>{info.text}</p>
             </div>
           );
         })
       ) : (
-        <div> <span><button onClick = {deselect}>X</button></span>
-          <h2>{selected.title}</h2>
+        <div>
+          {" "}
+          <span>
+            <button onClick={deselect}>X</button>
+          </span>
           <p>{selected.text}</p>
-          <Link to = {`/posts/${selected.id}`}>Update</Link>
+          <div onClick = {updating}>Update</div>
+          <UpdatePost isUpdating = {isUpdating} />
         </div>
-      )
-      }
+      )}
     </>
   );
 };

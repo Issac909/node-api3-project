@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const UpdatePost = () => {
+const UpdatePost = (props) => {
   const [post, setPost] = useState({});
   const [newPost, setNewPost] = useState({});
 
@@ -18,24 +18,21 @@ const UpdatePost = () => {
     }
   };
 
-  const updatePost = (e) => {
-    e.preventDefault();
+  const updatePost = () => {
     if (newPost) {
       return axios
         .put(`http://localhost:5000/posts/${id}`, id)
         .then((res) => {
-          return newPost;
+          console.log(res);
+          return newPost.text;
         })
         .catch((err) => console.log(err));
-    } 
+    }
   };
 
   const handleChanges = (e) => {
     e.preventDefault();
-    setNewPost({
-      ...newPost,
-      [e.target.title]: e.target.value,
-    });
+    setNewPost({ text: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -49,15 +46,19 @@ const UpdatePost = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={newPost.text}
-          placeholder={post.text}
-          onChange={handleChanges}
-        />
-        <button type="submit" />
-      </form>
+      {props.isUpdating ? (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={newPost.text}
+            placeholder={post.text}
+            onChange={handleChanges}
+          />
+          <button type="submit">Confirm</button>
+        </form>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

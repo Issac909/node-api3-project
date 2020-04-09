@@ -3,7 +3,6 @@ const posts = require('./post-model');
 const router = express.Router();
 
 // Custom middleware can be found in the 'common' folder
-const validatePostId = require('../common/validate-post-id');
 const validatePost = require('../common/validate-post');
 
 router.get('/', (req, res) => {
@@ -14,7 +13,7 @@ router.get('/', (req, res) => {
 
 });
 
-router.get('/:id', validatePostId, (req, res) => {
+router.get('/:id',  (req, res) => {
   posts
     .getById(req.params.id)
     .then(post => res.status(200).json(post))
@@ -28,7 +27,7 @@ router.post('/', validatePost, (req, res) => {
     .catch(err => console.log('This is a post error', err));
 })
 
-router.delete('/:id', validatePostId, (req, res) => {
+router.delete('/:id',  (req, res) => {
   posts
     .remove(req.params.id)
     .then(post => {
@@ -37,7 +36,7 @@ router.delete('/:id', validatePostId, (req, res) => {
   .catch(err => res.status(404).json({errorMessage: `cannot delete post`, err}))
 });
 
-router.put('/:id', validatePostId, validatePost, (req, res) => {
+router.put('/:id', validatePost, (req, res) => {
   posts
     .update(req.params.id, req.text)
     .then(data => res.status(201).json(data))

@@ -46,7 +46,7 @@ const PostForm = () => {
           onChange={handleChanges}
         />
 
-        <input type="submit" />
+        <button type="submit">Submit</button>
       </form>
     </>
   );

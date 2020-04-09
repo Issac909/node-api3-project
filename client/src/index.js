@@ -8,7 +8,7 @@ import App from './App';
 ReactDOM.render(
   <Router>
     <React.StrictMode>
-      <Route path = '/' component = {App} />
+      <App />
     </React.StrictMode>
   </Router>,
   document.getElementById('root')
